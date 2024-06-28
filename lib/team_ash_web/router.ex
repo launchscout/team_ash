@@ -1,6 +1,8 @@
 defmodule TeamAshWeb.Router do
   use TeamAshWeb, :router
 
+  use AshAuthentication.Phoenix.Router
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -18,6 +20,26 @@ defmodule TeamAshWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    ash_authentication_live_session :authentication_required,
+      on_mount: {TeamAshWeb.LiveAuth, :live_user_required} do
+      live "/engagements", EngagementLive.Index, :index
+      live "/engagements/new", EngagementLive.Index, :new
+      live "/engagements/:id", EngagementLive.Show, :show
+      live "/engagements/:id/edit", EngagementLive.Show, :edit
+
+      live "/clients", ClientLive.Index, :index
+      live "/clients/new", ClientLive.Index, :new
+      live "/clients/:id/edit", ClientLive.Index, :edit
+
+      live "/clients/:id", ClientLive.Show, :show
+      live "/clients/:id/show/edit", ClientLive.Show, :edit
+    end
+
+    sign_in_route(register_path: "/register", reset_path: "/reset")
+    sign_out_route AuthController
+    auth_routes_for TeamAsh.Accounts.User, to: AuthController
+    reset_route []
   end
 
   # Other scopes may use custom stacks.

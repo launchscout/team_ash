@@ -9,7 +9,8 @@ module.exports = {
   content: [
     "./js/**/*.js",
     "../lib/team_ash_web.ex",
-    "../lib/team_ash_web/**/*.*ex"
+    "../lib/team_ash_web/**/*.*ex",
+    "../deps/ash_authentication_phoenix/**/*.*ex"
   ],
   theme: {
     extend: {

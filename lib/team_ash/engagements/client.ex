@@ -10,15 +10,21 @@ defmodule TeamAsh.Engagements.Client do
     repo TeamAsh.Repo
   end
 
+  resource do
+    plural_name :clients
+  end
+
   actions do
     # Exposes default built in actions to manage the resource
     defaults [:read, :destroy]
 
     create :create do
+      primary? true
       accept [:name, :source, :owner, :closed_on]
     end
 
     update :update do
+      primary? true
       accept [:name, :source, :owner, :closed_on]
     end
 

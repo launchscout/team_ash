@@ -23,7 +23,7 @@ config :team_ash, TeamAshWeb.Endpoint,
   live_view: [signing_salt: "lFQoGqzR"]
 
 # Configure Ash
-config :team_ash, ash_domains: [TeamAsh.Engagements]
+config :team_ash, ash_domains: [TeamAsh.Engagements, TeamAsh.Accounts]
 
 config :ash, :default_belongs_to_type, :integer
 

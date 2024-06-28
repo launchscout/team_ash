@@ -5,6 +5,10 @@ defmodule TeamAsh.Engagements.Engagement do
     domain: Engagements,
     data_layer: AshPostgres.DataLayer
 
+  resource do
+    plural_name :engagements
+  end
+
   postgres do
     table "engagements"
 
@@ -17,12 +21,12 @@ defmodule TeamAsh.Engagements.Engagement do
 
     create :create do
       # accept title as input
-      accept [:starts_on, :ends_on, :name]
+      accept [:starts_on, :ends_on, :name, :client_id]
     end
 
     update :update do
       # accept content as input
-      accept [:starts_on, :ends_on, :name]
+      accept [:starts_on, :ends_on, :name, :client_id]
     end
 
     # Defines custom read action which fetches post by id.
@@ -35,6 +39,10 @@ defmodule TeamAsh.Engagements.Engagement do
       # against the `id` of each element in the resource
       filter expr(id == ^arg(:id))
     end
+  end
+
+  preparations do
+    prepare build(load: [:client])
   end
 
   attributes do

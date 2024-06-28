@@ -5,7 +5,7 @@ config :team_ash, TeamAsh.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "dashboard_dev",
+  database: "team_ash_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

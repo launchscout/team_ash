@@ -16,6 +16,7 @@ defmodule TeamAsh.Application do
       {Finch, name: TeamAsh.Finch},
       # Start a worker by calling: TeamAsh.Worker.start_link(arg)
       # {TeamAsh.Worker, arg},
+      {AshAuthentication.Supervisor, otp_app: :team_ash},
       # Start to serve requests, typically the last entry
       TeamAshWeb.Endpoint
     ]
