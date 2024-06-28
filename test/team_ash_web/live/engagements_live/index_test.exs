@@ -6,7 +6,7 @@ defmodule TeamAshWeb.EngagementsLive.IndexTest do
   alias TeamAsh.Engagements
   alias TeamAsh.Accounts
 
-  test "sort by engagement name", %{conn: conn} do
+  setup %{conn: conn} do
     user = Accounts.User
     |> Ash.Changeset.for_create(:register_with_password, %{
       email: "test@user.com",
@@ -15,14 +15,17 @@ defmodule TeamAshWeb.EngagementsLive.IndexTest do
     })
     |> Ash.create!()
 
+    %{conn: conn |> login(user)}
+  end
+
+  test "sort by engagement name", %{conn: conn} do
+
+
     Engagements.create_engagement!(%{name: "Puffle"})
     Engagements.create_engagement!(%{name: "Bubble"})
     Engagements.create_engagement!(%{name: "Zazzle"})
 
-    {:ok, view, html} =
-      conn
-      |> login(user)
-      |> live(~p"/engagements")
+    {:ok, view, html} = live(conn, ~p"/engagements")
 
     assert has_element?(view, ~s/table tr:first-child/, "Puffle")
 
@@ -31,6 +34,24 @@ defmodule TeamAshWeb.EngagementsLive.IndexTest do
     |> render_click()
 
     assert has_element?(view, ~s/table tr:first-child/, "Bubble")
+  end
+
+  test "sort by client name", %{conn: conn} do
+    client1 = Engagements.create_client!(%{name: "Poo"})
+    client2 = Engagements.create_client!(%{name: "Yap"})
+    client3 = Engagements.create_client!(%{name: "Bob"})
+
+    Engagements.create_engagement!(%{client_id: client1.id, name: "Wut"})
+    Engagements.create_engagement!(%{client_id: client2.id, name: "Wutter"})
+    Engagements.create_engagement!(%{client_id: client3.id, name: "Wuttest"})
+
+    {:ok, view, html} = live(conn, ~p"/engagements")
+
+    view
+    |> element(~s/th button[phx-value-column="client.name"]/)
+    |> render_click()
+
+    assert has_element?(view, ~s/table tr:first-child/, "Bob")
   end
 
   defp login(conn, user) do

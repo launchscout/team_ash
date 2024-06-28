@@ -25,11 +25,11 @@ defmodule TeamAshWeb.EngagementLive.Index do
       id="engagements"
       row_click={fn engagement -> JS.navigate(~p"/engagements/#{engagement}") end}
     >
-      <:col :let={engagement} label="Id"><%= engagement.id %></:col>
+      <:col :let={engagement} label="Id" sort_key="id"><%= engagement.id %></:col>
       <:col :let={engagement} label="Name" sort_key="name">
         <%= engagement.name %>
       </:col>
-      <:col :let={engagement} label="Client" sort_key="client.name">
+      <:col :let={engagement} label="Client" sort_key="client.name" sort_fn={&sort_by_client_name/2}>
         <%= if engagement.client, do: engagement.client.name %>
       </:col>
 
@@ -68,6 +68,10 @@ defmodule TeamAshWeb.EngagementLive.Index do
       />
     </.modal>
     """
+  end
+
+  defp sort_by_client_name(query, direction) do
+    Ash.Query.sort(query, {Ash.Sort.expr_sort(client.name), direction})
   end
 
   @impl true

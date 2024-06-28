@@ -61,9 +61,17 @@ defmodule TeamAshWeb.UI.SortableTable do
     |> then(&{:ok, &1})
   end
 
-  defp load_rows(%{assigns: %{query: query, sort: {field, direction}, col: columns}} = socket) do
-    rows = query |> Ash.Query.sort({String.to_existing_atom(field), direction}) |> Ash.read!()
+  defp load_rows(%{assigns: %{query: query, sort: sort, col: columns}} = socket) do
+    rows = query |> apply_sort(sort, columns) |> Ash.read!()
     assign(socket, :rows, rows)
+  end
+
+  defp apply_sort(query, {sort_key, direction}, columns) do
+    col = columns |> Enum.find(&(&1[:sort_key] == sort_key))
+    case col do
+      %{sort_fn: sort_fn} when is_function(sort_fn) -> sort_fn.(query, direction)
+      _ -> Ash.Query.sort(query, {String.to_existing_atom(sort_key), direction})
+    end
   end
 
   @impl true
