@@ -9,7 +9,7 @@
           <%= for col <- @col, Map.get(col, :when, true) do %>
             <%= if Map.has_key?(col, :sort_key) do %>
               <UI.Table.column_header column={col} sort={@sort}>
-                <UI.Table.sort_button target={assigns[:pagination_target] || @myself} column={col} sort={@sort} />
+                <UI.Table.sort_button target={@myself} column={col} sort={@sort} />
               </UI.Table.column_header>
             <% else %>
               <UI.Table.column_header column={col} sort={@sort}>

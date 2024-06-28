@@ -7,20 +7,20 @@ defmodule TeamAshWeb.UI.SortableTable do
     Expects the following parameters as assigns:
 
     * `id` - necessary, as this is a stateful LiveView component
-    * `rows` - a list of maps to be displayed in the table body. Maps are expected to have `id` keys at a minimum, if a sort key is passed, that column heading becomes sortable by that key.
+    * `resource` - An Ash resource module
     * `sort` (optional) - a `t:sort/0` specifying the initial sort direction
     * `col` columns
+      * attribute - the field this column displays, used to sort
+      * sort_expr - optional expression for complex sorts
     * `caption` (optional)
-    * `filter_keys` (optional) - set of string-valued keys to search within using a default, basic case-insensitive string match. Overridden by filter_fn.
-    * `filter_fn` (optional) - 2-arg predicate function taking item and search input, returning true if match
 
     Columns specified using either atoms or {atom, String} tuples are assumed to be sortable.
 
     ## Examples:
         rows = [%{id: 1, foo: 1, bar: "bar"}, %{id: 2, foo: 2, bar: "baa"}]
         <.live_component module={TeamAshWeb.UI.SortableTable} id="1"
-            rows=rows
-            sort={{:bar, :asc}}>
+            resource={TeamAsh.Engagements.Engagement}
+            sort={{:name, :asc}}>
         </.live_component>
 
   """
@@ -61,8 +61,8 @@ defmodule TeamAshWeb.UI.SortableTable do
     |> then(&{:ok, &1})
   end
 
-  defp load_rows(%{assigns: %{query: query, sort: sort}} = socket) do
-    rows = query |> Ash.Query.sort(sort) |> Ash.read!()
+  defp load_rows(%{assigns: %{query: query, sort: {field, direction}, col: columns}} = socket) do
+    rows = query |> Ash.Query.sort({String.to_existing_atom(field), direction}) |> Ash.read!()
     assign(socket, :rows, rows)
   end
 
@@ -72,7 +72,6 @@ defmodule TeamAshWeb.UI.SortableTable do
         %{"column" => column, "direction" => direction} = _params,
         socket
       ) do
-    column = String.to_existing_atom(column)
     direction = String.to_existing_atom(direction)
     sort = {column, direction}
 

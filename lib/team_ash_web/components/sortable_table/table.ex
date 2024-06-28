@@ -32,8 +32,7 @@ defmodule TeamAshWeb.UI.Table do
 
   defp sort_direction(column, sort) do
     with %{sort_key: column_key} when is_binary(column_key) <- column,
-         {sort_key, direction} <- sort,
-         ^sort_key <- String.to_existing_atom(column_key) do
+         {^column_key, direction} <- sort do
       toggle_direction(direction)
     else
       _ -> :asc
@@ -45,8 +44,7 @@ defmodule TeamAshWeb.UI.Table do
 
   defp sort_class(column, sort) do
     with %{sort_key: column_key} when is_binary(column_key) <- column,
-         {sort_key, direction} <- sort,
-         ^sort_key <- String.to_existing_atom(column_key) do
+         {^column_key, direction} <- sort do
       Atom.to_string(direction)
     else
       _ -> "none"

@@ -21,7 +21,7 @@ defmodule TeamAshWeb.EngagementLive.Index do
     <.live_component
       module={TeamAshWeb.UI.SortableTable}
       resource={Engagements.Engagement}
-      sort={{:id, :asc}}
+      sort={{"id", :asc}}
       id="engagements"
       row_click={fn engagement -> JS.navigate(~p"/engagements/#{engagement}") end}
     >
@@ -29,7 +29,7 @@ defmodule TeamAshWeb.EngagementLive.Index do
       <:col :let={engagement} label="Name" sort_key="name">
         <%= engagement.name %>
       </:col>
-      <:col :let={engagement} label="Client">
+      <:col :let={engagement} label="Client" sort_key="client.name">
         <%= if engagement.client, do: engagement.client.name %>
       </:col>
 
