@@ -23,19 +23,17 @@ defmodule TeamAshWeb.EngagementLive.Index do
       resource={Engagements.Engagement}
       sort={{:id, :asc}}
       id="engagements"
-      stream_key={:engagements}
-      rows={@streams.engagements}
-      row_click={fn {_id, engagement} -> JS.navigate(~p"/engagements/#{engagement}") end}
+      row_click={fn engagement -> JS.navigate(~p"/engagements/#{engagement}") end}
     >
-      <:col :let={{_id, engagement}} label="Id"><%= engagement.id %></:col>
-      <:col :let={{_id, engagement}} label="Name" sort_key="name">
+      <:col :let={engagement} label="Id"><%= engagement.id %></:col>
+      <:col :let={engagement} label="Name" sort_key="name">
         <%= engagement.name %>
       </:col>
-      <:col :let={{_id, engagement}} label="Client">
+      <:col :let={engagement} label="Client">
         <%= if engagement.client, do: engagement.client.name %>
       </:col>
 
-      <:action :let={{_id, engagement}}>
+      <:action :let={engagement}>
         <div class="sr-only">
           <.link navigate={~p"/engagements/#{engagement}"}>Show</.link>
         </div>

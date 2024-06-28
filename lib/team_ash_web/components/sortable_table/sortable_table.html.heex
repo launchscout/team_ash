@@ -20,7 +20,7 @@
         </tr>
       </thead>
       <tbody>
-        <%= for row <- @streams[@stream_key] do %>
+        <%= for row <- @rows do %>
           <tr>
             <%= for col <- @col, Map.get(col, :when, true) do %>
               <td class={if Map.has_key?(col, :centered), do: "u-text--center"}>

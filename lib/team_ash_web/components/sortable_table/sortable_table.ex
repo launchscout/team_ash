@@ -29,7 +29,6 @@ defmodule TeamAshWeb.UI.SortableTable do
 
   @assigns [
     :id,
-    :rows,
     :sort,
     :resource,
     :stream_key,
@@ -56,45 +55,22 @@ defmodule TeamAshWeb.UI.SortableTable do
   @impl true
   def update(assigns, socket) do
     socket
-    |> stream(
-      assigns.stream_key,
-      read_rows(assigns.resource, assigns.sort)
-    )
     |> assign(Map.take(assigns, @assigns))
-    |> assign_new(:filter_fn, fn -> filter_on_keys(assigns[:filter_keys]) end)
+    |> assign(:query, assigns.resource)
+    |> load_rows()
     |> then(&{:ok, &1})
   end
 
-  defp read_rows(resource, sort) do
-    resource |> Ash.Query.sort(sort) |> Ash.read!()
+  defp load_rows(%{assigns: %{query: query, sort: sort}} = socket) do
+    rows = query |> Ash.Query.sort(sort) |> Ash.read!()
+    assign(socket, :rows, rows)
   end
-
-  def filter_on_keys(nil), do: nil
-
-  def filter_on_keys(keys) do
-    fn
-      item, %{"search_string" => filter} when is_map(item) and is_binary(filter) ->
-        filter = String.downcase(filter)
-
-        keys
-        |> Enum.map(&get_filter_value(item, &1))
-        |> Enum.filter(&is_binary/1)
-        |> Enum.map(&String.downcase/1)
-        |> Enum.any?(&String.contains?(&1, filter))
-
-      _, _ ->
-        false
-    end
-  end
-
-  defp get_filter_value(item, {key, nested}), do: get_filter_value(item[key], nested)
-  defp get_filter_value(item, key), do: item[key] || ""
 
   @impl true
   def handle_event(
         "sort",
         %{"column" => column, "direction" => direction} = _params,
-        %{assigns: %{resource: resource, stream_key: stream_key}} = socket
+        socket
       ) do
     column = String.to_existing_atom(column)
     direction = String.to_existing_atom(direction)
@@ -102,23 +78,8 @@ defmodule TeamAshWeb.UI.SortableTable do
 
     socket
     |> assign(sort: sort)
-    |> stream(
-      stream_key,
-      read_rows(resource, sort)
-    )
+    |> load_rows()
     |> then(&{:noreply, &1})
-  end
-
-  def handle_event("filter", %{"search" => filter}, socket) do
-    socket
-    |> assign(:filter, filter)
-    |> noreply()
-  end
-
-  defp filter_rows(_filter_fn, filter, rows) when filter in ["", nil], do: rows
-
-  defp filter_rows(filter_fn, filter, rows) do
-    Enum.filter(rows, &filter_fn.(&1, filter))
   end
 
   def sort_class(column_key, {sort_key, direction}) do
