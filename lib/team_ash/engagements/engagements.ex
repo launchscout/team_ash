@@ -18,6 +18,7 @@ defmodule TeamAsh.Engagements do
       define :update_client, action: :update
       define :destroy_client, action: :destroy
       define :get_client, args: [:id], action: :by_id
+      define :query_clients, args: [:query], action: :query
     end
   end
 

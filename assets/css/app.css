@@ -2,4 +2,23 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+autocomplete-input [aria-selected='true'] {
+  background-color: lavender;
+}
+
+autocomplete-input [aria-disabled='true'] {
+  color: grey;
+}
+
+simple-autocomplete:state(closed) ul {
+  display: none;
+}
+
+*:not(:defined) {
+  display: none;
+}
+
+ul[slot="list"]:not(:has(li)) {
+  display: none;
+}
 /* This file is for your main application CSS */

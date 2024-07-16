@@ -20,13 +20,16 @@ defmodule TeamAshWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/test_form", PageController, :test_form
+
+    live "/foo_form", FooForm
 
     ash_authentication_live_session :authentication_required,
       on_mount: {TeamAshWeb.LiveAuth, :live_user_required} do
       live "/engagements", EngagementLive.Index, :index
       live "/engagements/new", EngagementLive.Index, :new
       live "/engagements/:id", EngagementLive.Show, :show
-      live "/engagements/:id/edit", EngagementLive.Show, :edit
+      live "/engagements/:id/show/edit", EngagementLive.Show, :edit
 
       live "/clients", ClientLive.Index, :index
       live "/clients/new", ClientLive.Index, :new

@@ -1,0 +1,14 @@
+<form>
+  <div><label>Mom</label> <input name="mom" /></div>
+  <div>
+    <label>Dad</label>
+    <foo-input name="dad"></foo-input>
+  </div>
+</form>
+
+<button>Show form stuff</button>
+<script type="module">
+  document.querySelector('button').addEventListener('click', () => {
+    new FormData(document.querySelector('form')).forEach(console.log);
+  });
+</script>

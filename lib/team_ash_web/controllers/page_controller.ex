@@ -6,4 +6,6 @@ defmodule TeamAshWeb.PageController do
     # so skip the default app layout.
     render(conn, :home, layout: false)
   end
+
+  def test_form(conn, _params), do: render(conn, :test_form)
 end

@@ -27,7 +27,7 @@ defmodule TeamAshWeb.EngagementLive.Index do
     >
       <:col :let={engagement} label="Id" sort_key="id"><%= engagement.id %></:col>
       <:col :let={engagement} label="Name" sort_key="name">
-        <%= engagement.name %>
+        <.link navigate={~p"/engagements/#{engagement.id}"}><%= engagement.name %></.link>
       </:col>
       <:col :let={engagement} label="Client" sort_key="client.name" sort_fn={&sort_by_client_name/2}>
         <%= if engagement.client, do: engagement.client.name %>

@@ -31,12 +31,18 @@ defmodule TeamAsh.Engagements.Client do
     # Defines custom read action which fetches post by id.
     read :by_id do
       # This action has one argument :id of type :uuid
-      argument :id, :uuid, allow_nil?: false
+      argument :id, :integer, allow_nil?: false
       # Tells us we expect this action to return a single result
       get? true
       # Filters the `:id` given in the argument
       # against the `id` of each element in the resource
       filter expr(id == ^arg(:id))
+    end
+
+    read :query do
+      argument :query, :string, allow_nil?: false
+
+      filter expr(contains(string_downcase(name), string_downcase(^arg(:query))))
     end
   end
 

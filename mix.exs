@@ -38,7 +38,7 @@ defmodule TeamAsh.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.20.2"},
+      {:phoenix_live_view, "~> 1.0.0-rc.6", override: true},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
@@ -63,7 +63,8 @@ defmodule TeamAsh.MixProject do
       {:ash_postgres, "~> 2.0"},
       {:ash_phoenix, "~> 2.0"},
       {:ash_authentication, "~> 4.0"},
-      {:ash_authentication_phoenix, "~> 2.0"}
+      {:ash_authentication_phoenix, "~> 2.0"},
+      {:live_elements, "~> 0.2.3"}
     ]
   end
 
